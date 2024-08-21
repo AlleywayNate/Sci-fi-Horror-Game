@@ -9,13 +9,15 @@ public class ZombieBoid : MonoBehaviour
     public float detectionRadius = 10f;
     public float separationDistance = 1.5f;
     public float fieldOfViewAngle = 60f;
-    public float roamRadius = 20f; // Radius for roaming behavior
-    public float roamTimer = 5f; // Time before changing roaming direction
+    public float roamRadius = 20f;
+    public float roamTimerMin = 3f; // Minimum time before changing direction
+    public float roamTimerMax = 7f; // Maximum time before changing direction
 
     private Transform player;
     private Rigidbody rb;
     private Vector3 roamDirection;
     private float roamTime;
+    private float nextRoamChangeTime;
     private bool isPlayerDetected = false;
 
     void Start()
@@ -23,7 +25,7 @@ public class ZombieBoid : MonoBehaviour
         player = GameObject.FindWithTag("Player").transform;
         rb = GetComponent<Rigidbody>();
         SetNewRoamDirection();
-        roamTime = Time.time;
+        ScheduleNextRoamChange();
     }
 
     void Update()
@@ -65,7 +67,7 @@ public class ZombieBoid : MonoBehaviour
     {
         Vector3 direction = (player.position - transform.position).normalized;
         Vector3 velocity = direction * speed;
-        
+
         Vector3 separation = Vector3.zero;
         foreach (var zombie in GameObject.FindGameObjectsWithTag("Zombie"))
         {
@@ -88,10 +90,10 @@ public class ZombieBoid : MonoBehaviour
 
     void RoamAround()
     {
-        if (Time.time - roamTime > roamTimer)
+        if (Time.time >= nextRoamChangeTime)
         {
             SetNewRoamDirection();
-            roamTime = Time.time;
+            ScheduleNextRoamChange();
         }
 
         Vector3 targetPosition = transform.position + roamDirection * speed * Time.deltaTime;
@@ -108,6 +110,11 @@ public class ZombieBoid : MonoBehaviour
         roamDirection = randomDirection.normalized;
     }
 
+    void ScheduleNextRoamChange()
+    {
+        nextRoamChangeTime = Time.time + Random.Range(roamTimerMin, roamTimerMax);
+    }
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
@@ -120,7 +127,6 @@ public class ZombieBoid : MonoBehaviour
         Gizmos.DrawLine(transform.position, transform.position + leftBoundary);
         Gizmos.DrawLine(transform.position, transform.position + rightBoundary);
         Gizmos.DrawLine(transform.position + leftBoundary, transform.position + rightBoundary);
-
         // Gizmo for roaming direction
         Gizmos.color = Color.blue;
         Gizmos.DrawLine(transform.position, transform.position + roamDirection * roamRadius);
