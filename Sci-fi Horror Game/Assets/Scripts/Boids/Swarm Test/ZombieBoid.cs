@@ -10,22 +10,23 @@ public class ZombieBoid : MonoBehaviour
     public float separationDistance = 1.5f;
     public float fieldOfViewAngle = 60f;
     public float roamRadius = 20f;
-    public float roamTimerMin = 3f; // Minimum time before changing direction
-    public float roamTimerMax = 7f; // Maximum time before changing direction
+    public float roamTimerMin = 3f;
+    public float roamTimerMax = 7f;
 
+    public static List<ZombieBoid> allBoids = new List<ZombieBoid>();
     private Transform player;
     private Rigidbody rb;
     private Vector3 roamDirection;
     private float roamTime;
     private float nextRoamChangeTime;
     private bool isPlayerDetected = false;
+    private static Vector3 lastKnownPlayerPosition; // Static variable
 
     void Start()
     {
         player = GameObject.FindWithTag("Player").transform;
         rb = GetComponent<Rigidbody>();
-        SetNewRoamDirection();
-        ScheduleNextRoamChange();
+        allBoids.Add(this);
     }
 
     void Update()
@@ -33,23 +34,25 @@ public class ZombieBoid : MonoBehaviour
         if (player != null)
         {
             float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+            bool isWithinDetectionRadius = distanceToPlayer <= detectionRadius;
+            bool isWithinFieldOfView = Vector3.Angle(transform.forward, (player.position - transform.position).normalized) < fieldOfViewAngle / 2f;
 
-            if (distanceToPlayer <= detectionRadius)
+            if (isWithinDetectionRadius && isWithinFieldOfView)
             {
-                Vector3 directionToPlayer = (player.position - transform.position).normalized;
-                float angle = Vector3.Angle(transform.forward, directionToPlayer);
-
-                if (angle < fieldOfViewAngle / 2f)
+                RaycastHit hit;
+                if (Physics.Raycast(transform.position, (player.position - transform.position).normalized, out hit, detectionRadius))
                 {
-                    RaycastHit hit;
-                    if (Physics.Raycast(transform.position, directionToPlayer, out hit, detectionRadius))
+                    if (hit.collider.CompareTag("Player"))
                     {
-                        if (hit.collider.CompareTag("Player"))
-                        {
-                            isPlayerDetected = true;
-                        }
+                        lastKnownPlayerPosition = player.position; // Update static variable
+                        isPlayerDetected = true;
+                        NotifyAllBoids();
                     }
                 }
+            }
+            else
+            {
+                isPlayerDetected = false;
             }
         }
 
@@ -63,15 +66,25 @@ public class ZombieBoid : MonoBehaviour
         }
     }
 
+    void NotifyAllBoids()
+    {
+        foreach (var boid in allBoids)
+        {
+            boid.isPlayerDetected = true;
+            // Correct way to update static variable for all instances
+            boid.GetType().GetField("lastKnownPlayerPosition", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic).SetValue(null, lastKnownPlayerPosition);
+        }
+    }
+
     void ChasePlayer()
     {
-        Vector3 direction = (player.position - transform.position).normalized;
+        Vector3 direction = (lastKnownPlayerPosition - transform.position).normalized;
         Vector3 velocity = direction * speed;
 
         Vector3 separation = Vector3.zero;
-        foreach (var zombie in GameObject.FindGameObjectsWithTag("Zombie"))
+        foreach (var zombie in allBoids)
         {
-            if (zombie != this.gameObject)
+            if (zombie != this)
             {
                 float distance = Vector3.Distance(transform.position, zombie.transform.position);
                 if (distance < separationDistance)
@@ -127,6 +140,7 @@ public class ZombieBoid : MonoBehaviour
         Gizmos.DrawLine(transform.position, transform.position + leftBoundary);
         Gizmos.DrawLine(transform.position, transform.position + rightBoundary);
         Gizmos.DrawLine(transform.position + leftBoundary, transform.position + rightBoundary);
+
         // Gizmo for roaming direction
         Gizmos.color = Color.blue;
         Gizmos.DrawLine(transform.position, transform.position + roamDirection * roamRadius);
