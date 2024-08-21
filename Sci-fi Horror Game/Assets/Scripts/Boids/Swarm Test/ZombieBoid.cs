@@ -4,29 +4,39 @@ using UnityEngine;
 
 public class ZombieBoid : MonoBehaviour
 {
-    public float speed = 3.5f;          // Movement speed of the zombie
-    public float rotationSpeed = 5f;    // Speed at which the zombie rotates towards the player
-    public float detectionRadius = 10f; // How far the zombie can detect the player
-    public float separationDistance = 1.5f; // Minimum distance from other zombies
+    public float speed = 3.5f;
+    public float rotationSpeed = 5f;
+    public float detectionRadius = 10f;
+    public float separationDistance = 1.5f;
 
-    private Transform player;           // Reference to the player's transform
-    private Rigidbody rb;               // Rigidbody for physics-based movement
+    private Transform player;
+    private Rigidbody rb;
+    private Vector3 velocity;
+
+    private bool isPlayerDetected = false;
+    private float awarenessDelay = 2f; // Time before the zombie fully detects the player
 
     void Start()
     {
-        player = GameObject.FindWithTag("Player").transform; // Assumes the player has the "Player" tag
+        player = GameObject.FindWithTag("Player").transform;
         rb = GetComponent<Rigidbody>();
+
+        StartCoroutine(DelayedAwareness());
+    }
+
+    IEnumerator DelayedAwareness()
+    {
+        yield return new WaitForSeconds(awarenessDelay);
+        isPlayerDetected = true;
     }
 
     void Update()
     {
-        if (player != null)
+        if (isPlayerDetected && player != null)
         {
-            // Move towards the player
             Vector3 direction = (player.position - transform.position).normalized;
             Vector3 velocity = direction * speed;
 
-            // Apply separation from other zombies
             Vector3 separation = Vector3.zero;
             foreach (var zombie in GameObject.FindGameObjectsWithTag("Zombie"))
             {
@@ -40,13 +50,20 @@ public class ZombieBoid : MonoBehaviour
                 }
             }
 
-            // Combine movement towards the player with separation from other zombies
             Vector3 finalVelocity = (velocity + separation.normalized * speed).normalized * speed;
             rb.MovePosition(rb.position + finalVelocity * Time.deltaTime);
 
-            // Rotate towards the player
             Quaternion targetRotation = Quaternion.LookRotation(direction);
             rb.MoveRotation(Quaternion.Slerp(rb.rotation, targetRotation, rotationSpeed * Time.deltaTime));
         }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, detectionRadius);
+
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, separationDistance);
     }
 }

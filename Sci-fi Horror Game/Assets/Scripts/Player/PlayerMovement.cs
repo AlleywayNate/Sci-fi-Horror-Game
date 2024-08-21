@@ -7,6 +7,7 @@ public class PlayerMovement : MonoBehaviour
     public float moveSpeed = 5f;
     public float rotationSpeed = 10f;
     public float jumpForce = 5f;
+    public Transform cameraTransform;
 
     private CharacterController controller;
     private Vector3 moveDirection;
@@ -31,8 +32,18 @@ public class PlayerMovement : MonoBehaviour
         float moveX = Input.GetAxis("Horizontal");
         float moveZ = Input.GetAxis("Vertical");
 
-        // Move in the direction the player is facing
-        Vector3 move = transform.right * moveX + transform.forward * moveZ;
+        // Calculate the direction to move in based on the camera's orientation
+        Vector3 forward = cameraTransform.forward;
+        Vector3 right = cameraTransform.right;
+
+        // Normalize vectors to avoid faster diagonal movement
+        forward.y = 0f;  // Keep the forward vector horizontal
+        right.y = 0f;    // Keep the right vector horizontal
+        forward.Normalize();
+        right.Normalize();
+
+        // Combine the forward and right vectors with input to get the movement direction
+        Vector3 move = forward * moveZ + right * moveX;
         controller.Move(move * moveSpeed * Time.deltaTime);
 
         // Jumping
@@ -46,7 +57,7 @@ public class PlayerMovement : MonoBehaviour
         controller.Move(moveDirection * Time.deltaTime);
 
         // Rotate the player based on mouse movement
-        float mouseX = Input.GetAxis("Mouse X") * rotationSpeed;
+        float mouseX = Input.GetAxis("Mouse X") * rotationSpeed * Time.deltaTime;
         transform.Rotate(Vector3.up * mouseX);
     }
 }
