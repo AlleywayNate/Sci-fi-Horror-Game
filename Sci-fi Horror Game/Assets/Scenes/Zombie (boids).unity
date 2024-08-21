@@ -123,39 +123,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &311151602
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 311151603}
-  m_Layer: 0
-  m_Name: Zombie Boids
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &311151603
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 311151602}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -11.759701}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 314389371}
-  - {fileID: 751805270}
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &314389370
 GameObject:
   m_ObjectHideFlags: 0
@@ -182,11 +149,12 @@ Transform:
   m_GameObject: {fileID: 314389370}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.6801286, y: 0.2938155, z: 11.17623}
+  m_LocalPosition: {x: 0, y: 0, z: -105.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 311151603}
+  m_Children:
+  - {fileID: 751805270}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &314389372
 MonoBehaviour:
@@ -201,9 +169,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   zombiePrefab: {fileID: 751805269}
-  spawnCount: 229
-  spawnRadius: 130.6
-  safeDistance: 14.6
+  spawnCount: 300
+  spawnRadius: 300
+  safeDistance: 50
   player: {fileID: 873574626}
 --- !u!1 &356448669
 GameObject:
@@ -457,7 +425,7 @@ GameObject:
   - component: {fileID: 1830161707}
   - component: {fileID: 1830161706}
   m_Layer: 0
-  m_Name: Player
+  m_Name: Capsule Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -771,7 +739,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 311151603}
+    m_TransformParent: {fileID: 314389371}
     m_Modifications:
     - target: {fileID: 2262980514854332768, guid: 9a8c63dfe1cb7744e8a88e4655f5a4a2, type: 3}
       propertyPath: m_LocalPosition.x
@@ -783,7 +751,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2262980514854332768, guid: 9a8c63dfe1cb7744e8a88e4655f5a4a2, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -21.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2262980514854332768, guid: 9a8c63dfe1cb7744e8a88e4655f5a4a2, type: 3}
       propertyPath: m_LocalRotation.w
@@ -830,8 +798,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1925206040}
     - target: {fileID: 5160144888610544331, guid: 9a8c63dfe1cb7744e8a88e4655f5a4a2, type: 3}
+      propertyPath: detectionRadius
+      value: 21.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 5160144888610544331, guid: 9a8c63dfe1cb7744e8a88e4655f5a4a2, type: 3}
+      propertyPath: fieldOfViewAngle
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 5160144888610544331, guid: 9a8c63dfe1cb7744e8a88e4655f5a4a2, type: 3}
       propertyPath: separationDistance
-      value: 0.13
+      value: 0.36
       objectReference: {fileID: 0}
     - target: {fileID: 6555407504115294066, guid: 9a8c63dfe1cb7744e8a88e4655f5a4a2, type: 3}
       propertyPath: m_Name
@@ -861,4 +837,4 @@ SceneRoots:
   - {fileID: 1925206041}
   - {fileID: 367098204}
   - {fileID: 873574626}
-  - {fileID: 311151603}
+  - {fileID: 314389371}
