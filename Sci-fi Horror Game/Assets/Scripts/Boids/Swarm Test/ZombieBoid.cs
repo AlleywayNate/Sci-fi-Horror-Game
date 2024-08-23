@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 public class ZombieBoid : MonoBehaviour
 {
     public float speed = 3.5f;
@@ -10,50 +11,77 @@ public class ZombieBoid : MonoBehaviour
 
     private Transform player;
     private Rigidbody rb;
-    private Vector3 velocity;
-
+    private Vector3 lastKnownPlayerPosition;
     private bool isPlayerDetected = false;
-    private float awarenessDelay = 2f; // Time before the zombie fully detects the player
 
     void Start()
     {
         player = GameObject.FindWithTag("Player").transform;
         rb = GetComponent<Rigidbody>();
-
-        StartCoroutine(DelayedAwareness());
-    }
-
-    IEnumerator DelayedAwareness()
-    {
-        yield return new WaitForSeconds(awarenessDelay);
-        isPlayerDetected = true;
     }
 
     void Update()
     {
-        if (isPlayerDetected && player != null)
+        if (player != null)
         {
-            Vector3 direction = (player.position - transform.position).normalized;
-            Vector3 velocity = direction * speed;
+            float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
-            Vector3 separation = Vector3.zero;
-            foreach (var zombie in GameObject.FindGameObjectsWithTag("Zombie"))
+            // Detect the player if within the detection radius
+            if (distanceToPlayer <= detectionRadius)
             {
-                if (zombie != this.gameObject)
+                lastKnownPlayerPosition = player.position; // Store the last known position
+                isPlayerDetected = true;
+            }
+        }
+
+        // Chase the last known position of the player
+        if (isPlayerDetected)
+        {
+            ChaseLastKnownPosition();
+        }
+    }
+
+    void ChaseLastKnownPosition()
+    {
+        // Calculate the direction to the last known player position
+        Vector3 direction = (lastKnownPlayerPosition - transform.position).normalized;
+
+        // Calculate the velocity to move in the direction
+        Vector3 velocity = direction * speed;
+
+        // Apply separation logic to avoid boids clustering
+        Vector3 separation = Vector3.zero;
+        foreach (var zombie in GameObject.FindGameObjectsWithTag("Zombie"))
+        {
+            if (zombie != this.gameObject)
+            {
+                // Calculate the distance to each other zombie
+                float distance = Vector3.Distance(transform.position, zombie.transform.position);
+
+                // If the distance is less than the separation distance, add a separation force
+                if (distance < separationDistance)
                 {
-                    float distance = Vector3.Distance(transform.position, zombie.transform.position);
-                    if (distance < separationDistance)
-                    {
-                        separation += (transform.position - zombie.transform.position) / distance;
-                    }
+                    // Calculate the separation force as the normalized direction from this zombie to the other
+                    // multiplied by the distance (so closer zombies have a stronger force)
+                    separation += (transform.position - zombie.transform.position) / distance;
                 }
             }
+        }
 
-            Vector3 finalVelocity = (velocity + separation.normalized * speed).normalized * speed;
-            rb.MovePosition(rb.position + finalVelocity * Time.deltaTime);
+        // Calculate the final velocity by adding the separation force to the original velocity
+        Vector3 finalVelocity = (velocity + separation.normalized * speed).normalized * speed;
 
-            Quaternion targetRotation = Quaternion.LookRotation(direction);
-            rb.MoveRotation(Quaternion.Slerp(rb.rotation, targetRotation, rotationSpeed * Time.deltaTime));
+        // Move the boid to the new position
+        rb.MovePosition(rb.position + finalVelocity * Time.deltaTime);
+
+        // Rotate the boid to face the direction it's moving
+        Quaternion targetRotation = Quaternion.LookRotation(direction);
+        rb.MoveRotation(Quaternion.Slerp(rb.rotation, targetRotation, rotationSpeed * Time.deltaTime));
+
+        // Stop chasing if the boid reaches the last known position
+        if (Vector3.Distance(transform.position, lastKnownPlayerPosition) < 0.5f)
+        {
+            isPlayerDetected = false;
         }
     }
 

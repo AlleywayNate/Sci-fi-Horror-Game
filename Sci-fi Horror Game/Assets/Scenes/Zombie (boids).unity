@@ -172,7 +172,7 @@ MonoBehaviour:
   spawnCount: 300
   spawnRadius: 300
   safeDistance: 50
-  player: {fileID: 873574626}
+  player: {fileID: 1830161705}
 --- !u!1 &356448669
 GameObject:
   m_ObjectHideFlags: 0
@@ -336,82 +336,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!1 &873574623
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 873574626}
-  - component: {fileID: 873574625}
-  - component: {fileID: 873574624}
-  m_Layer: 0
-  m_Name: Player
-  m_TagString: Player
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &873574624
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 873574623}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da5e91ea7ad397740a6650117c503812, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeed: 25
-  rotationSpeed: 10
-  jumpForce: 5
-  cameraTransform: {fileID: 1925206041}
---- !u!143 &873574625
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 873574623}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Height: 2
-  m_Radius: 0.5
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!4 &873574626
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 873574623}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1830161705}
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1830161704
 GameObject:
   m_ObjectHideFlags: 0
@@ -424,9 +348,11 @@ GameObject:
   - component: {fileID: 1830161708}
   - component: {fileID: 1830161707}
   - component: {fileID: 1830161706}
+  - component: {fileID: 1830161710}
+  - component: {fileID: 1830161709}
   m_Layer: 0
-  m_Name: Capsule Collider
-  m_TagString: Untagged
+  m_Name: Player
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -439,12 +365,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1830161704}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 873574626}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!136 &1830161706
 CapsuleCollider:
@@ -519,6 +445,48 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1830161704}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1830161709
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1830161704}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da5e91ea7ad397740a6650117c503812, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 5
+  rotationSpeed: 10
+  jumpForce: 5
+  cameraTransform: {fileID: 1925206041}
+--- !u!143 &1830161710
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1830161704}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Height: 2
+  m_Radius: 0.5
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1925206038
 GameObject:
   m_ObjectHideFlags: 0
@@ -624,7 +592,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 993634f4fd5ddb744a63a589934c33ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerBody: {fileID: 873574626}
+  playerBody: {fileID: 1830161705}
   mouseSensitivity: 100
   distanceFromPlayer: 10
 --- !u!1 &2038115431
@@ -788,7 +756,7 @@ PrefabInstance:
     - target: {fileID: 5160144888610544331, guid: 9a8c63dfe1cb7744e8a88e4655f5a4a2, type: 3}
       propertyPath: player
       value: 
-      objectReference: {fileID: 873574626}
+      objectReference: {fileID: 0}
     - target: {fileID: 5160144888610544331, guid: 9a8c63dfe1cb7744e8a88e4655f5a4a2, type: 3}
       propertyPath: mainZombie
       value: 
@@ -798,8 +766,12 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1925206040}
     - target: {fileID: 5160144888610544331, guid: 9a8c63dfe1cb7744e8a88e4655f5a4a2, type: 3}
+      propertyPath: rotationSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5160144888610544331, guid: 9a8c63dfe1cb7744e8a88e4655f5a4a2, type: 3}
       propertyPath: detectionRadius
-      value: 21.7
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 5160144888610544331, guid: 9a8c63dfe1cb7744e8a88e4655f5a4a2, type: 3}
       propertyPath: fieldOfViewAngle
@@ -807,7 +779,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5160144888610544331, guid: 9a8c63dfe1cb7744e8a88e4655f5a4a2, type: 3}
       propertyPath: separationDistance
-      value: 0.36
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6555407504115294066, guid: 9a8c63dfe1cb7744e8a88e4655f5a4a2, type: 3}
       propertyPath: m_Name
@@ -836,5 +808,5 @@ SceneRoots:
   - {fileID: 356448671}
   - {fileID: 1925206041}
   - {fileID: 367098204}
-  - {fileID: 873574626}
+  - {fileID: 1830161705}
   - {fileID: 314389371}
